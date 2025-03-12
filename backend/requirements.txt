@@ -1,0 +1,10 @@
+Flask
+pdf2image
+PyPDF2
+openai
+pandas
+werkzeug
+pdfminer
+pdfplumber
+pdftotext
+python-dotenv

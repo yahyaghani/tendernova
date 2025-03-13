@@ -5,6 +5,7 @@ from utils.file_processing import convert_pdf_to_images, get_pdf_metadata
 from utils.openai_utils import openai_summarize_document
 from utils.feature_extraction import extract_features_openai
 from utils.data_processing import create_df
+from utils.pdf_llbox import get_user_pdf
 
 app = Flask(__name__)
 
@@ -36,21 +37,23 @@ def upload_pdf():
         # Extract metadata
         metadata = get_pdf_metadata(filepath)
 
-        # Convert PDF to images
-        images = convert_pdf_to_images(filepath)
+        returned_dict=get_user_pdf(filepath)
+        print("Success")
+        # # Convert PDF to images
+        # images = convert_pdf_to_images(filepath)
 
         # Analyze document type
-        doc_summary = openai_summarize_document(images)
-        print(type(doc_summary))
-        print("doc_summary",doc_summary)
-        if doc_summary.get("BankStatement", False):
-            extracted_data = extract_features_openai(images)
-            df = create_df(extracted_data)
-            return jsonify({"metadata": metadata, "document_type": doc_summary, "extracted_data": df.to_dict()})
+    #     # doc_summary = openai_summarize_document(images)
+    #     print(type(doc_summary))
+    #     print("doc_summary",doc_summary)
+    #     if doc_summary.get("BankStatement", False):
+    #         extracted_data = extract_features_openai(images)
+    #         df = create_df(extracted_data)
+    #         return jsonify({"metadata": metadata, "document_type": doc_summary, "extracted_data": df.to_dict()})
 
-        return jsonify({"metadata": metadata, "document_type": doc_summary, "message": "Processing skipped for this document type"})
+    #     return jsonify({"metadata": metadata, "document_type": doc_summary, "message": "Processing skipped for this document type"})
 
-    return jsonify({"error": "Invalid file format"}), 400
+    # return jsonify({"error": "Invalid file format"}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)
